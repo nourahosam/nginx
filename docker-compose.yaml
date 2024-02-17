@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  employees:
+    image: nourahossam99/employee:latest
+    build: ../employee # Builds the image from the Dockerfile in the current directory
+    ports:
+      - "8880:8880" # Maps container port 8080 to host port 8080
+    container_name: employees
+  
+  vehicles:
+    image: nourahossam99/vehicles:latest
+    build: ../vehicles # Builds the image from the Dockerfile in the current directory
+    ports:
+      - "8881:8881" # Maps container port 8080 to host port 8080
+    container_name: vehicles
+    depends_on:
+      - employees
+  
+  nginx:
+    image: nourahossam99/nginx:latest
+    depends_on:
+      - employees
+      - vehicles
+    restart: always
+    build: ./nginx
+    ports:
+      - "80:80"
+
